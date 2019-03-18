@@ -35,7 +35,7 @@ public class HTMLDocument {
     }
 
     /**
-     * A methd that saves the information that needs to be saved for this project.
+     * A method that saves the information that needs to be saved for this project.
      * @throws Exception
      */
     public void saveAll() throws Exception {
