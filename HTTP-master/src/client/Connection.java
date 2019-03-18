@@ -61,9 +61,7 @@ public class Connection {
         // the head is finished, now we interpret the body
         if (! response.isFinished()) {
         	// Chunked body
-        	if (response.isChunked()){
-        		while (true) {
-        		
+        	if (response.isChunked()){        		
         		StringBuilder returnLine = new StringBuilder();
         		while (true){
 	                //get the chunk size as a hexadecimal string.
@@ -82,6 +80,7 @@ public class Connection {
         		}
         		byte[] byteData = returnLine.toString().getBytes();
         		response.setData(byteData);
+        		
         	// Normal body with given content length
         	}else {
         		final int contentLength = response.getContentLength();
