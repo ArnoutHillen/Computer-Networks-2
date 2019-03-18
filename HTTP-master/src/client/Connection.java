@@ -64,38 +64,36 @@ public class Connection {
         	
         	// Chunked body
         	if (response.isChunked()){
-        		String data;
-        		
+        		String line = "";
+        		String returnLine = "";
         		while (true){
+        			//get new line
                     char nextChar = (char) inputStream.read();
-                    System.out.println("---");
-        			System.out.println(nextChar);
-                    System.out.println("---");
-
-        			String line = "";
+                    //TODO ADDED THIS WHILE
+                    while(nextChar == '\n') {
+                    	nextChar = (char) inputStream.read();
+                    }
+                    line = "";
                     while (nextChar != '\n') {
                     	if (nextChar != '\r') {
                             line += nextChar;
-                            System.out.println(line);
                     	}
                         nextChar = (char) inputStream.read();
                     }
-                    
-                    System.out.println(line);
+	                //get the chunk size
                     Integer chunkSize = Integer.parseInt(line, 16);
-                    System.out.println(chunkSize);
                     
                     if (chunkSize.equals(0)){
                     	break;
                     }
-                    
+                    //get the chunk
                     nextChar = (char) inputStream.read();
         			line = "";
                     for (int i=0 ; i<chunkSize ; i++) {
                     	line += nextChar;
                         nextChar = (char) inputStream.read();
                     } 
-                    System.out.println(line);
+                    returnLine += line;
         		}
         		
         		// TODO check for blank line
