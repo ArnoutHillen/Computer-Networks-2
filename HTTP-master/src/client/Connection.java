@@ -62,6 +62,8 @@ public class Connection {
         if (! response.isFinished()) {
         	// Chunked body
         	if (response.isChunked()){
+        		while (true) {
+        		
         		StringBuilder returnLine = new StringBuilder();
         		while (true){
 	                //get the chunk size as a hexadecimal string.
@@ -98,23 +100,23 @@ public class Connection {
                line += nextChar;
             nextChar = (char) inputStream.read();
         }
-    	System.out.println("1)");
+    	//System.out.println("1)");
     	System.out.println(line);
-    	return line.replace("\r", "");
+    	return line.replace("\\r\\n", "");
     }
     
     
     public String getChunk(int chunkSize) throws IOException {
         char nextChar = (char) inputStream.read();
 		String line = "";
-		int size = "\r\n".length();
-        for (int i=0 ; i<chunkSize+size ; i++) {
+		//int size = "\r\n".length();
+        for (int i=0 ; i < chunkSize + 2 ; i++) {
         	line += nextChar;
             nextChar = (char) inputStream.read();
         } 
-    	System.out.println("2)");
-    	System.out.println(line);
-        return line.replace("\r\n", "");
+    	//System.out.println("2)");
+    	//System.out.println(line);
+        return line.replaceAll("\\r\\n", "");
     }
     
     /**
