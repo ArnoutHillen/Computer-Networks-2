@@ -23,6 +23,7 @@ public class Response {
     private byte[] data;
     private Map<String, String> headers = new HashMap<>();
     private int contentLength;
+    private boolean isChunked;
 
     /**
      * The constructor for the request class. It requires the methond name, url, HTTP version and data and it adds the necessary
@@ -75,9 +76,15 @@ public class Response {
                     this.success = true;
                 }
 
-                // If the message hasn't ended yet, set the content length to the header value.
+                // If the message hasn't ended yet, check for transfer-encoding. Otherwise set the content length.
                 if (!this.messageEnded) {
-                    this.contentLength = Integer.parseInt(this.headers.get("content-length"));
+                	
+                	// check for transfer-encoding header
+                	if (this.headers.containsKey("transfer-encoding")) {
+                		this.isChunked = true;
+                	}else {
+                        this.contentLength = Integer.parseInt(this.headers.get("content-length"));
+                	}
                 }
             } else {
                 // Add header
@@ -86,6 +93,10 @@ public class Response {
                 headers.put(components[0].toLowerCase(), components[1].trim());
             }
         }
+    }
+    
+    public boolean isChunked(){
+    	return this.isChunked;
     }
 
     public String getReasonPhrase() {

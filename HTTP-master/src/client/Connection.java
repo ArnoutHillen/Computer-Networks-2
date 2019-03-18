@@ -59,12 +59,28 @@ public class Connection {
             }
             response.interpretHead(line);
         }
-
+        // the head is finished, now we interpret the body
         if (! response.isFinished()) {
-            final int contentLength = response.getContentLength();
-            byte[] data = new byte[contentLength];
-            this.inputStream.readFully(data, 0, contentLength);
-            response.setData(data);
+        	
+        	// Chunked body
+        	if (response.isChunked()){
+        		while (! response.isFinished()){
+                    char nextChar = (char) inputStream.read();
+        			String line = "";
+                    while (nextChar != '\n') {
+                        line += nextChar;
+                        nextChar = (char) inputStream.read();
+                    }
+                    //response.interpretBody(line);
+        		}
+        		
+        	// Normal body with given content length
+        	}else {
+        		final int contentLength = response.getContentLength();
+                byte[] data = new byte[contentLength];
+                this.inputStream.readFully(data, 0, contentLength);
+                response.setData(data);
+        	}
         }
 
         return response;
