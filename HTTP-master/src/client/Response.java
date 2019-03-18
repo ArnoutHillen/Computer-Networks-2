@@ -57,12 +57,13 @@ public class Response {
                     this.messageEnded = true;
 
                 // If there is'nt a header "content-length", there is no body, so the message has ended.
-                if (!this.headers.containsKey("content-length")) {
-                    this.contentLength = 0;
-                    this.messageEnded = true;
+                if (!this.headers.containsKey("content-length") && !this.headers.containsKey("transfer-encoding")) {
+                	this.contentLength = 0;
+                    this.messageEnded = true;	
                 }
                 // Else, if the content-length equals 0, there is no body, so he message has ended.
-                else if (Integer.parseInt(this.headers.get("content-length")) == 0) {
+                else if (this.headers.containsKey("content-length") && 
+                		Integer.parseInt(this.headers.get("content-length")) == 0) {
                     this.messageEnded = true;
                     this.contentLength = 0;
                 }
@@ -93,6 +94,10 @@ public class Response {
                 headers.put(components[0].toLowerCase(), components[1].trim());
             }
         }
+    }
+    
+    public void interpretBody(String line){
+    	
     }
     
     public boolean isChunked(){

@@ -48,7 +48,7 @@ public class Connection {
         Response response = new Response(request);
 
         // Read character by character because:
-        //  1) inputStream.readLine() strips the \r and \n which are necessary for character counting
+        //  1) inputStream.readLine() strips the \r and \n 
         //  2) the last line doesn't necessarily end with a \n, so inputStream.readLine() doesn't read it.
         while (! response.headFinished()) {
             char nextChar = (char) inputStream.read();
@@ -64,15 +64,32 @@ public class Connection {
         	
         	// Chunked body
         	if (response.isChunked()){
-        		while (! response.isFinished()){
+        		
+        		while (true){
                     char nextChar = (char) inputStream.read();
         			String line = "";
                     while (nextChar != '\n') {
-                        line += nextChar;
+                    	if (nextChar != '\r') {
+                            line += nextChar;
+                    	}
                         nextChar = (char) inputStream.read();
                     }
-                    //response.interpretBody(line);
+                    
+                    int chunkSize = Integer.parseInt(line, 16);
+                    
+                    if (chunkSize == 0){
+                    	break;
+                    }
+                    
+                    nextChar = (char) inputStream.read();
+        			line = "";
+                    for (int i=0 ; i<chunkSize ; i++) {
+                    	line += nextChar;
+                        nextChar = (char) inputStream.read();
+                    } 
         		}
+        		
+        		// TODO check for blank line
         		
         	// Normal body with given content length
         	}else {

@@ -38,7 +38,7 @@ public class Request {
             String[] components = line.split(" ");
             this.method = HTTPMethod.valueOf(components[0].trim());
             if (components[1].equals("/"))
-                this.requestedFile = new URI("index.html");
+                this.requestedFile = new URI("index");
             else
                 this.requestedFile = new URI(components[1]);
             this.version = components[2].split("/")[1].trim();
