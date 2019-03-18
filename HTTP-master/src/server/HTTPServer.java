@@ -15,7 +15,7 @@ public class HTTPServer {
     public static void main(String[] args) throws Exception {
 
         if (args.length != 1) {
-            throw new IllegalArgumentException(); //Only the port number should be provided
+            throw new IllegalArgumentException(); // Only the port number should be provided
         }
 
         int portNumber = Integer.parseInt(args[0]);

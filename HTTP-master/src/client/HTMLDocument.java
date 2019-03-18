@@ -126,7 +126,7 @@ public class HTMLDocument {
     }
 
     /**
-     * saves the URL when there is no hostname.
+     * saves the URL when there is no host name.
      * @param url
      * @throws Exception
      */

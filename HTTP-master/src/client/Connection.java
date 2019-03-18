@@ -64,20 +64,28 @@ public class Connection {
         	
         	// Chunked body
         	if (response.isChunked()){
+        		String data;
         		
         		while (true){
                     char nextChar = (char) inputStream.read();
+                    System.out.println("---");
+        			System.out.println(nextChar);
+                    System.out.println("---");
+
         			String line = "";
                     while (nextChar != '\n') {
                     	if (nextChar != '\r') {
                             line += nextChar;
+                            System.out.println(line);
                     	}
                         nextChar = (char) inputStream.read();
                     }
                     
-                    int chunkSize = Integer.parseInt(line, 16);
+                    System.out.println(line);
+                    Integer chunkSize = Integer.parseInt(line, 16);
+                    System.out.println(chunkSize);
                     
-                    if (chunkSize == 0){
+                    if (chunkSize.equals(0)){
                     	break;
                     }
                     
@@ -87,6 +95,7 @@ public class Connection {
                     	line += nextChar;
                         nextChar = (char) inputStream.read();
                     } 
+                    System.out.println(line);
         		}
         		
         		// TODO check for blank line
