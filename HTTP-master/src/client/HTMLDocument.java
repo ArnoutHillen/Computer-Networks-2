@@ -97,13 +97,13 @@ public class HTMLDocument {
         	
         	// replace the ads with their ad blocker equivalent.
         	if (image.attr("src").contains("ad")) {
-        		if (image.attr("src").contains("1")){
+        		if (image.attr("src").equals("ad1.jpg")){
         			image.removeAttr("src");
         			image.attr("src", "ad1_replacement.jpg");
-        		}else if (image.attr("src").contains("2")){
+        		}else if (image.attr("src").equals("ad2.jpg")){
         			image.removeAttr("src");
         			image.attr("src", "ad2_replacement.jpg");
-        		}else if (image.attr("src").contains("3")){
+        		}else if (image.attr("src").equals("ad3.jpg")){
         			image.removeAttr("src");
                 	image.attr("src", "ad3_replacement.jpg");
         		}

@@ -50,12 +50,12 @@ public class Connection {
         // Read character by character because:
         //  1) inputStream.readLine() is deprecated
         while (! response.headFinished()) {
-            char nextChar = (char) inputStream.read();
             String line = "";
-            while (nextChar != '\n') {
+            do {
+                char nextChar = (char) inputStream.read();
                 line += nextChar;
-                nextChar = (char) inputStream.read();
-            }
+            } while (!line.endsWith("\r\n"));
+            
             response.interpretHead(line);
         }
         // the head is finished, now we interpret the body
@@ -64,23 +64,24 @@ public class Connection {
         	if (response.isChunked()){        		
         		StringBuilder returnLine = new StringBuilder();
         		while (true){
+        			int returnLineLength = returnLine.length();
 	                //get the chunk size as a hexadecimal string.
         			String hexaChunkSize = getHexaChunkSize();
         			returnLine.append(hexaChunkSize)
         						.append("\r\n");
                     Integer chunkSize = Integer.parseInt(hexaChunkSize, 16);
                     if (chunkSize.equals(0)){
-                    	returnLine.append("0\r\n")
-                    				.append("\r\n");
+                    	returnLine.append("\r\n");
                     	break;
                     }
                     // get the chunk 
                     String chunk = getChunk(chunkSize);
+                    int chunkLength = chunk.length();
                     returnLine.append(chunk + "\r\n");
         		}
         		byte[] byteData = returnLine.toString().getBytes();
         		response.setData(byteData);
-        		
+        	
         	// Normal body with given content length
         	}else {
         		final int contentLength = response.getContentLength();
@@ -94,28 +95,28 @@ public class Connection {
 
     public String getHexaChunkSize() throws IOException {
     	String line = "";
-        char nextChar = (char) inputStream.read();
-    	while (nextChar != '\n') {
-               line += nextChar;
-            nextChar = (char) inputStream.read();
-        }
+    	do {
+            char nextChar = (char) inputStream.read();
+    		line += nextChar;
+        } while (!line.endsWith("\r\n"));
     	//System.out.println("1)");
-    	System.out.println(line);
-    	return line.replace("\\r\\n", "");
+    	//System.out.println(line);
+    	return line.trim();
     }
     
     
     public String getChunk(int chunkSize) throws IOException {
-        char nextChar = (char) inputStream.read();
 		String line = "";
 		//int size = "\r\n".length();
-        for (int i=0 ; i < chunkSize + 2 ; i++) {
+        //for (int i=0 ; i < chunkSize + 2 ; i++) {
+		do {
+            char nextChar = (char) inputStream.read();
         	line += nextChar;
-            nextChar = (char) inputStream.read();
-        } 
+        } while (!line.endsWith("\r\n"));
+		
     	//System.out.println("2)");
     	//System.out.println(line);
-        return line.replaceAll("\\r\\n", "");
+        return line.trim();
     }
     
     /**
