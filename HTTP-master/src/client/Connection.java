@@ -71,6 +71,9 @@ public class Connection {
         						.append("\r\n");
                     Integer chunkSize = Integer.parseInt(hexaChunkSize, 16);
                     if (chunkSize.equals(0)){
+                    	// read the remaining CRLF from the input stream.
+                    	inputStream.read();
+                    	inputStream.read();
                     	returnLine.append("\r\n");
                     	break;
                     }

@@ -150,19 +150,19 @@ public class Response {
         result.append(this.getResponseCode())
                 .append(" ")
                 .append(this.getReasonPhrase())
-                .append("\n");
+                .append("\r\n");
         for (Map.Entry<String, String> header : headers.entrySet()) {
             result.append(header.getKey())
                     .append(": ")
                     .append(header.getValue())
-                    .append("\n");
+                    .append("\r\n");
         }
 
 
-        result.append("\n");
+        result.append("\r\n");
         if (this.getData() != null)
             result.append(new String(this.getData(), StandardCharsets.ISO_8859_1))
-                    .append("\n");
+                    .append("\r\n");
         return result.toString();
     }
 }
